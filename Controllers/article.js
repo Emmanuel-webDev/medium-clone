@@ -65,10 +65,9 @@ router.get('/allStories', async(req, res)=>{
 })
 
 //get story
-let read_count = 0
 router.get('/story/:id', async(req, res)=>{
     const story = await article.findById({_id: req.params.id})
-    story.read_count = read_count++
+     const counts = story.count()
     res.send(story)
 })
 

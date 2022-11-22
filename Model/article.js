@@ -13,7 +13,8 @@ const articleSchema = new mongoose.Schema({
         default: 0
        },
        read_count:{
-         type: Number
+         type: Number,
+         default: 0
        },
        read_time:{
         type:Number,
@@ -32,6 +33,11 @@ const articleSchema = new mongoose.Schema({
 
 articleSchema.methods.clap = function(){
     this.claps++
+    return this.save()
+}
+
+articleSchema.methods.count = function(){
+    this.read_count++
     return this.save()
 }
 
