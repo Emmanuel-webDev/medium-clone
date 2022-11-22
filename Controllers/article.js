@@ -37,7 +37,7 @@ router.post("/publish", authorization, async(req, res)=>{
     })
 
     await story.save();
-    res.send(story)
+    res.send("Blog Sucessfully published")
 })
 
 //claps
@@ -50,11 +50,13 @@ router.post('/clap/:id', async(req, res)=>{
 //write a comment
 router.post('/comment/:id', authorization, async (req, res)=>{
     const {comments}  = req.body
+
   const story = await article.findById({_id: req.params.id})
   const addComment = story.comment({
-    author: req.user._id,
-    text: req.body.comments
+    text: req.body.text,
+    author: req.user._id
   })
+  console.log(story.comments)
   res.send('ok')
 })
 
@@ -69,6 +71,25 @@ router.get('/story/:id', async(req, res)=>{
     const story = await article.findById({_id: req.params.id})
      const counts = story.count()
     res.send(story)
+})
+
+//get personal stories
+router.get('/personalBlogs', async(req, res)=>{
+    const stories = await article.aggregate([
+        {
+            $match:{author: req.user._id}
+        }
+    ])
+    if(stories.length === 0 || !stories){
+        return res.send("You've got no story")
+    }
+
+res.send(stories)
+})
+
+router.post('/del', async (req, res)=>{
+    const terminate = await article.deleteMany()
+    res.send('Done')
 })
 
 module.exports = router
