@@ -2,6 +2,7 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcryptjs")
 const user = require('../Model/user')
+const article = require('../Controllers/article')
 
 const route = express.Router()
 
@@ -43,6 +44,38 @@ route.post('/login', async(req, res)=>{
 }
 ).send('Yay!!! login successful')
 
+})
+
+const auth = async (req, res, next)=>{
+  const token = req.cookies.access_token
+  const verification = jwt.verify(token, process.env.SECRET)
+
+  if(!verification){
+      return res.ststus(403).send('Forbidden')
+  }
+
+  const currentUser = await user.findById(verification.id)
+  req.user = currentUser
+
+  next();
+}
+
+route.post('/follow/:id', auth, async(req, res)=>{
+  const author = await user.findById({_id: req.params.id})
+  const action = author.follower({
+    author: req.user._id
+  })
+   
+  res.send('You followed')
+})
+
+route.get('/users', async(req, res)=>{
+  const users = await user.find()
+  res.send(users)
+})
+
+route.post('/following', async(req, res)=>{
+  
 })
 
 
