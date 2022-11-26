@@ -20,12 +20,12 @@ const userSchema = new mongoose.Schema({
         }
            
      }],
-    following:[
-        {
+    following:[{
+       author:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"user" 
          }
-]
+}]
 })
 
 userSchema.methods.follower = function(d){
@@ -33,11 +33,8 @@ userSchema.methods.follower = function(d){
     return this.save()
 }
 
-userSchema.methods.follow = (user_id)=>{
-    if(this.following.indexOf(user_id) === -1){
-        this.following.push(user_id)
-        return this.save();
-    }
-}
+
+
+
 
 module.exports = mongoose.model("user", userSchema)

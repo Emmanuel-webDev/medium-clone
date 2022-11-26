@@ -3,10 +3,12 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require("bcryptjs")
 const user = require('../Model/user')
 const article = require('../Controllers/article')
+const jois = require('../inputsValidator')
+
 
 const route = express.Router()
 
-route.post('/signup', async(req, res)=>{
+route.post('/signup', jois, async(req, res)=>{
     const {fullname, email, password}= req.body
 
     const hashed = await bcrypt.hash(password, 12)
@@ -69,14 +71,31 @@ route.post('/follow/:id', auth, async(req, res)=>{
   res.send('You followed')
 })
 
+route.get('/following', auth, async(req, res)=>{
+const authIFollow = await user.aggregate([
+  {
+    $match:{followers:{$elemMatch:{author: req.user._id}}}
+  }
+])
+const currentUsr = await user.findOne({_id: req.user._id})
+
+authIFollow.forEach((user)=>{
+  return currentUsr.following.push({author: user._id})
+})
+  res.send(currentUsr.following) 
+})
+
+
 route.get('/users', async(req, res)=>{
   const users = await user.find()
   res.send(users)
 })
 
-route.post('/following', async(req, res)=>{
-  
+route.post('/del', async (req, res)=>{
+  const terminate = await user.deleteMany()
+  res.send('Done')
 })
+
 
 
 

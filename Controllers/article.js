@@ -87,10 +87,7 @@ router.get('/personalBlogs', async(req, res)=>{
 res.send(stories)
 })
 
-router.post('/del', async (req, res)=>{
-    const terminate = await article.deleteMany()
-    res.send('Done')
-})
+
 
 module.exports =  router
 
