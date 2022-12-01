@@ -71,30 +71,32 @@ route.post('/follow/:id', auth, async(req, res)=>{
   res.send('You followed')
 })
 
-route.get('/following', auth, async(req, res)=>{
-const authIFollow = await user.aggregate([
-  {
-    $match:{followers:{$elemMatch:{author: req.user._id}}}
-  }
-])
-const currentUsr = await user.findOne({_id: req.user._id})
 
-authIFollow.forEach((user)=>{
-  return currentUsr.following.push({author: user._id})
+route.get('/user/:id', async(req, res)=>{
+
+  const person = await user.findById({_id: req.params.id})
+
+  const authIFollow = await user.aggregate([
+    {
+      $match:{followers:{$elemMatch:{author: person._id}}}
+    }
+  ])
+
+  person.following = []
+  authIFollow.forEach((user)=>{
+  person.following.push({author: user._id})
+ })
+ person.save();
+  
+  res.send(person)
 })
-  res.send(currentUsr.following) 
+
+route.post('/logout', auth, async(req, res)=>{
+  return res.clearCookie('access_token').send("You logged out")
 })
 
 
-route.get('/users', async(req, res)=>{
-  const users = await user.find()
-  res.send(users)
-})
 
-route.post('/del', async (req, res)=>{
-  const terminate = await user.deleteMany()
-  res.send('Done')
-})
 
 
 
