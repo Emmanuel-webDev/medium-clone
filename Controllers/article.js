@@ -74,10 +74,10 @@ router.get('/story/:id', async(req, res)=>{
 })
 
 //get personal stories
-router.get('/personalBlogs', async(req, res)=>{
+router.get('/personalBlogs', authorization, async(req, res)=>{
     const stories = await article.aggregate([
         {
-            $match:{author: req.user._id}
+            $match:{author: req.user.fullname}
         }
     ])
     if(stories.length === 0 || !stories){

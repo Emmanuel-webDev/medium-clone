@@ -72,6 +72,7 @@ route.post('/follow/:id', auth, async(req, res)=>{
 })
 
 
+
 route.get('/user/:id', async(req, res)=>{
 
   const person = await user.findById({_id: req.params.id})
@@ -89,6 +90,15 @@ route.get('/user/:id', async(req, res)=>{
  person.save();
   
   res.send(person)
+})
+
+route.get('/users', async(req, res)=>{
+  res.send(await user.find())
+})
+
+route.delete('/del', async(req, res)=>{
+  await user.deleteMany()
+  res.send('Done')
 })
 
 route.post('/logout', auth, async(req, res)=>{
