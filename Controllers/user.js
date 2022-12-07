@@ -14,6 +14,11 @@ route.post('/signup', jois, async(req, res)=>{
     const hashed = await bcrypt.hash(password, 12)
     req.body.password = hashed
 
+    const check = await user.findOne({email: email})
+    if(check){
+       return res.status(403).send('Email already assigned to a user')
+    }
+
     const author = new user({
         fullname:req.body.fullname,
         email: req.body.email,
