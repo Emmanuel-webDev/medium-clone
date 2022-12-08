@@ -32,6 +32,7 @@ router.post("/publish", authorization, async(req, res)=>{
         title: req.body.title,
         description: req.body.description,
         text: req.body.text,
+        tags:req.body.tags,
         read_time:req.body.read_time,
         author: req.user.fullname
     })
@@ -87,6 +88,20 @@ router.get('/personalBlogs', authorization, async(req, res)=>{
 res.send(stories)
 })
 
+//filter Post By Tags
+router.get('/blog', authorization, async(req, res)=>{
+    const filter = await article.find({tags: { $in: [req.query.tags] }})
+    if(filter.length === 0){
+        return res.status(404).send("Couldn't find any post")
+    }
+    return res.status(200).send(filter)
+})
+
+
+router.delete('/delblogs', async(req, res)=>{
+    await article.deleteMany()
+    res.send('Done')
+  })
 
 
 module.exports =  router

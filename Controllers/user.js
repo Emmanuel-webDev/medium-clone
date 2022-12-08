@@ -77,10 +77,11 @@ route.post('/follow/:id', auth, async(req, res)=>{
 })
 
 
-
 route.get('/user/:id', async(req, res)=>{
-
-  const person = await user.findById({_id: req.params.id})
+const person = await user.findById({_id: req.params.id})
+if(!person){
+  return res.status(404).send('User not found')
+}
 
   const authIFollow = await user.aggregate([
     {

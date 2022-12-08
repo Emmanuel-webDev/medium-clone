@@ -2,15 +2,17 @@ const joi = require('joi')
 
 const validator = joi.object({
     fullname: joi.string().min(5).max(30).required(),
-   email: joi.string().email({minDomainSegments: 2, tlds:{allow:['com', 'net']}}).required(),
+   email: joi.string().email({minDomainSegments: 2, tlds:{allow:['com', 'net']}}).lowercase().required(),
    password: joi.string().required(),
  
 })
 
  const validation = async (req, res, next)=>{
-
+try{
    const value = await validator.validateAsync(req.body)
-   console.log(value.details)
+}catch(err){
+  return res.status(406).send(err.details[0].message)
+}
   
   next()
 }

@@ -22,6 +22,10 @@ app.use(rateLimiter({
 }))
 app.use(user)
 app.use(article)
+app.use((err, req, res, next)=>{
+    console.log(err)
+    return res.status(500).send('Server down...')
+})
 
 app.listen(process.env.PORT, ()=>{
     console.log("You've got this!!")

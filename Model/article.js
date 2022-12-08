@@ -4,6 +4,7 @@ const articleSchema = new mongoose.Schema({
        title: String,
        description: String,
        text: String,
+       tags:[{type:String}],
        author: {
         type: String,
         ref:"user"
