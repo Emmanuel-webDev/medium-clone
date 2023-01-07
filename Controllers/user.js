@@ -107,6 +107,25 @@ route.delete('/del', async(req, res)=>{
   res.send('Done')
 })
 
+route.post('/reset-password', async(req, res)=>{
+  const {userMail} = req.body
+
+  const verifyMail = await user.findOne({email: userMail})
+
+  if(!verifyMail){
+     return res.status(404).send('Enter a valid e-mail')
+  }
+
+  const secret = process.env.SECRET + verifyMail.password
+  const tokn = jwt.sign({id: verifyMail._id, dt: new Date()}, secret, {expiresIn: '5m'})
+
+  const resetLink = `https://localhost:3000/reset/${verifyMail._id}/${tokn}`
+
+  console.log(resetLink)
+  res.send('Link sent')
+
+})
+
 route.post('/logout', auth, async(req, res)=>{
   return res.clearCookie('access_token').send("You logged out")
 })

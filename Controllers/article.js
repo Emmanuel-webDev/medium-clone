@@ -38,7 +38,7 @@ router.post("/publish", authorization, async(req, res)=>{
     })
 
     await story.save();
-    res.send("Blog Sucessfully published")
+    res.status(201).send("Blog Sucessfully published")
 })
 
 //claps
@@ -58,7 +58,7 @@ router.post('/comment/:id', authorization, async (req, res)=>{
     author: req.user._id
   })
   console.log(story.comments)
-  res.send('ok')
+  res.send('Commented Successfully')
 })
 
 //get all stories
@@ -97,12 +97,25 @@ router.get('/blog', authorization, async(req, res)=>{
     return res.status(200).send(filter)
 })
 
+router.patch('/updateBlogs/:id', authorization, async(req, res)=>{
+const getBlog = await article.findById(req.params.id)
+if(getBlog.author !== req.user.fullname){
+    return res.status(403).send('You cant update other authors blog')
+}
+    const edit = await article.findByIdAndUpdate({_id: req.params.id}, {
+        title: req.body.title,
+        text: req.body.text,
+        tags: req.body.tags
+    })
+    res.status(201).send('updated')
+})
 
 router.delete('/delblogs', async(req, res)=>{
     await article.deleteMany()
-    res.send('Done')
+    res.send('Blog deleted successfully')
   })
 
+  
 
 module.exports =  router
 
