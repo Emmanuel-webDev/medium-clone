@@ -105,13 +105,18 @@ if(getBlog.author !== req.user.fullname){
     const edit = await article.findByIdAndUpdate({_id: req.params.id}, {
         title: req.body.title,
         text: req.body.text,
+        description: req.body.description,
         tags: req.body.tags
     })
     res.status(201).send('updated')
 })
 
-router.delete('/delblogs', async(req, res)=>{
-    await article.deleteMany()
+router.delete('/delblogs/:id', authorization, async(req, res)=>{
+    const getBlog = await article.findById(req.params.id)
+      if(getBlog.author !== req.user.fullname){
+         return res.status(403).send('You cant delete other authors blog')
+       }
+    await article.findByIdAndDelete({_id: req.params.id})
     res.send('Blog deleted successfully')
   })
 

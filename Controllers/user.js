@@ -8,7 +8,7 @@ const jois = require('../inputsValidator')
 
 const route = express.Router()
 
-route.post('/signup', jois, async(req, res)=>{
+route.post('/signup', async(req, res)=>{
     const {fullname, email, password}= req.body
 
     const hashed = await bcrypt.hash(password, 12)
@@ -35,12 +35,12 @@ route.post('/login', async(req, res)=>{
 
   const userExist = await user.findOne({email: email})
   if(!userExist){
-    return 'User not found'
+    return res.status(403).send('User not found') 
   }
   
   const checkPassword = await bcrypt.compare(password, userExist.password)
   if(!checkPassword){
-    return "Password incorrect"
+    return res.status(403).send("Password incorrect")
   }
 
   const token = jwt.sign({id: userExist._id, date: new Date()}, process.env.SECRET, {expiresIn: '2hr'})
@@ -107,24 +107,7 @@ route.delete('/del', async(req, res)=>{
   res.send('Done')
 })
 
-route.post('/reset-password', async(req, res)=>{
-  const {userMail} = req.body
 
-  const verifyMail = await user.findOne({email: userMail})
-
-  if(!verifyMail){
-     return res.status(404).send('Enter a valid e-mail')
-  }
-
-  const secret = process.env.SECRET + verifyMail.password
-  const tokn = jwt.sign({id: verifyMail._id, dt: new Date()}, secret, {expiresIn: '5m'})
-
-  const resetLink = `https://localhost:3000/reset/${verifyMail._id}/${tokn}`
-
-  console.log(resetLink)
-  res.send('Link sent')
-
-})
 
 route.post('/logout', auth, async(req, res)=>{
   return res.clearCookie('access_token').send("You logged out")
