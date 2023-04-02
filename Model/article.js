@@ -14,8 +14,8 @@ const articleSchema = new mongoose.Schema({
         default: 0
        },
        read_count:{
-         type: Number,
-         default: 0
+        type: Number,
+        default: 0
        },
        read_time:{
         type:Number,
@@ -34,17 +34,17 @@ const articleSchema = new mongoose.Schema({
 
 articleSchema.methods.clap = function(){
     this.claps++
-    return this.save()
+    return this.save();
 }
 
 articleSchema.methods.count = function(){
     this.read_count++
-    return this.save()
+    return this.save();
 }
 
 articleSchema.methods.comment = function(c){
    this.comments.push(c)
-   return this.save()
+   return this.save();
 }
 
-module.exports = mongoose.model('article', articleSchema)
+module.exports = mongoose.model('article', articleSchema);
