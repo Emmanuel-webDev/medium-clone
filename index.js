@@ -6,13 +6,18 @@ const user = require('./Controllers/user')
 const article = require('./Controllers/article') 
 require('dotenv').config()
 
-const app = express()
+const app = express();
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use(cookie());
+
+
+app.use(user);
+app.use(article);
 
 mongoose.connect('mongodb://127.0.0.1:27017/medium', {UseNewUrlParser: true}).then(()=>{
-
-app.use(express.urlencoded({extended: true}))
-app.use(express.json())
-app.use(cookie())
+    
 app.use(rateLimiter({
     windowMs: 0.25 * 60 * 1000,
     max: 5,
@@ -20,12 +25,11 @@ app.use(rateLimiter({
     standardHeaders: true,
     legacyHeaders: false
 }))
-app.use(user)
-app.use(article)
+
 app.use((err, req, res, next)=>{
     console.log(err.message)
     return res.status(500).send('Server down...')
-    next()
+    next();
 })
 
 app.listen(process.env.PORT, ()=>{

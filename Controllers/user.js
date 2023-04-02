@@ -11,22 +11,17 @@ const route = express.Router()
 route.post('/signup', async(req, res)=>{
     const {fullname, email, password}= req.body
 
-    const hashed = await bcrypt.hash(password, 12)
-    req.body.password = hashed
+    try {
+      const User = user.signup(fullname,email,password);
 
-    const check = await user.findOne({email: email})
-    if(check){
-       return res.status(403).send('Email already assigned to a user')
+      const token = jwt.sign({_id:User._id},process.env.SECRET,{ expiresIn: '1d'});
+
+      res.status(200).json({fullname,token:token});
+    } catch (error) {
+      res.status(400).json({error:error});
     }
 
-    const author = new user({
-        fullname:req.body.fullname,
-        email: req.body.email,
-        password: req.body.password
-    })
-
-    await author.save();
-    res.send("Author Created")
+    res.status(200).send("Author Created");
 
 })
 
@@ -39,6 +34,7 @@ route.post('/login', async(req, res)=>{
   }
   
   const checkPassword = await bcrypt.compare(password, userExist.password)
+
   if(!checkPassword){
     return res.status(403).send("Password incorrect")
   }
@@ -73,7 +69,7 @@ route.post('/follow/:id', auth, async(req, res)=>{
     author: req.user._id
   })
    
-  res.send('You followed')
+  res.send('You followed');
 })
 
 
