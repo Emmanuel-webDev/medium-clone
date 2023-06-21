@@ -50,6 +50,7 @@ route.post('/login', async(req, res)=>{
 })
 
 const auth = async (req, res, next)=>{
+  
   const token = req.cookies.access_token
   const verification = jwt.verify(token, process.env.SECRET)
 
