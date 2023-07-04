@@ -1,8 +1,5 @@
 import { useState } from "react";
-
 import { Link } from 'react-router-dom';
-
-
 
 import { TiPen } from "react-icons/ti";
 import { TfiUser } from "react-icons/tfi";
@@ -10,31 +7,41 @@ import { TfiUser } from "react-icons/tfi";
 
 const Header = () => {
 
-    const [menu,setMenu]= useState(false)
+    const [menu,setMenu]= useState(false);
 
     return (
         <>
-            <header className="h-16 bg-slate-50 mt-3  ">
-
-                <div className="parent-div flex justify-between">
+            <header className="h-14 bg-slate-50">
+                
+                <div className="parent-div p-2 flex justify-between">
                     {/* top left logo */}
                     <div className="top-left-image ml-4">
                         <img className="w-14 h-8" src="/Images/top_logo.png" alt="logo" />
                     </div>
 
                     {/* Write button for Desktop-view */}
-                    <div className="write w-8 sm:hidden md:block md:ml-[20rem] lg:ml-[40rem]">
+                    <div className="write w-8 sm:hidden md:block md:ml-[50vw] lg:ml-[60vw] ">
                         <div className="flex">
-                            <div>
-                                <TiPen size={25} color="black" />
-                            </div>
-                            <div className="font-semibold">Write</div>
+                            <Link to='/write'>
+                                <div>
+                                    <TiPen size={25} color="black" />
+                                </div>
+                                <div className="font-semibold">Write</div>
+                            </Link>
+                            
                         </div>
                         
                     </div>
 
                     {/* Profile which is on the top right */}
-                    <div className="z-10">
+                    <div className="z-10 flex gap-x-5">
+
+                        <button className="bg-green-400 text-white p-2 rounded-lg">
+                            <Link to='/signup'>
+                                SignUp
+                            </Link>
+                        </button>
+
                         <button className="sm:justify-end mr-5 flex" onClick={()=>{ setMenu(!menu) }}>
                             <div className="user-profile">
                                 <TfiUser size={25} />
@@ -46,7 +53,7 @@ const Header = () => {
                     </div>
 
                         {/* If clicked on profile button, this list of things will pop up */}
-                    { menu ? <div className="bg-white w-[60%] shadow-xl absolute top-12 right-4 rounded-md p-5">
+                    { menu ? <div className="bg-white w-[60%] shadow-xl absolute top-12 right-4 rounded-md p-5 lg:w-[25%] lg:mt-3">
                         
 
                         <Link to='/write' className="flex md:hidden">

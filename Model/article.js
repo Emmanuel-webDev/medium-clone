@@ -30,7 +30,7 @@ const articleSchema = new mongoose.Schema({
             text: String
         }
        ]
-});
+},{timestamps:true});
 
 articleSchema.methods.clap = function(){
     this.claps++

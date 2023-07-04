@@ -3,7 +3,7 @@ const joi = require('joi')
 const validator = joi.object({
   fullname: joi.string().min(5).max(30).required(),
   email: joi.string().email({minDomainSegments: 2, tlds:{allow:['com', 'net']}}).lowercase().required(),
-  password: joi.string().required(),
+  password: joi.string().required().min(8),
  
 })
 

@@ -28,7 +28,7 @@ router.post("/publish", authorization, async(req, res)=>{
      const timeTaken = Math.round(amountOfWords / 200)
      req.body.read_time = timeTaken
 
-    const story = new article({
+     const story = new article({
         title: req.body.title,
         description: req.body.description,
         text: req.body.text,
@@ -64,14 +64,14 @@ router.post('/comment/:id', authorization, async (req, res)=>{
 //get all stories
 router.get('/allStories', async(req, res)=>{
     const stories = await article.find()
-    res.send(stories)
+    res.status(200).json(stories)
 })
 
 //get story
 router.get('/story/:id', async(req, res)=>{
     const story = await article.findById({_id: req.params.id})
      const counts = story.count()
-    res.send(story)
+    res.send(story).json(story)
 })
 
 //get personal stories
@@ -85,7 +85,7 @@ router.get('/personalBlogs', authorization, async(req, res)=>{
         return res.send("You've got no story")
     }
 
-res.send(stories)
+    res.send(stories).json(stories);
 })
 
 //filter Post By Tags
@@ -108,7 +108,7 @@ if(getBlog.author !== req.user.fullname){
         description: req.body.description,
         tags: req.body.tags
     })
-    res.status(201).send('updated')
+    res.status(201).send('updated');
 })
 
 router.delete('/delblogs/:id', authorization, async(req, res)=>{
@@ -120,7 +120,4 @@ router.delete('/delblogs/:id', authorization, async(req, res)=>{
     res.send('Blog deleted successfully')
   })
 
-  
-
 module.exports =  router
-

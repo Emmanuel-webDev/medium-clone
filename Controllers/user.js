@@ -6,7 +6,11 @@ const article = require('../Controllers/article')
 const jois = require('../inputsValidator')
 
 
-const route = express.Router()
+const route = express.Router();
+
+const createToken = (_id)=>{
+  return jwt.sign({_id},process.env.SECRET,{expiresIn:'1d'});
+}
 
 route.post('/signup', async(req, res)=>{
     const {fullname, email, password}= req.body
@@ -14,7 +18,9 @@ route.post('/signup', async(req, res)=>{
     try {
       const User = user.signup(fullname,email,password);
 
-      const token = jwt.sign({_id:User._id},process.env.SECRET,{ expiresIn: '1d'});
+      // const token = jwt.sign({_id:User._id},process.env.SECRET,{ expiresIn: '1d'});
+
+      const token = createToken(User._id);
 
       res.status(200).json({fullname,token:token});
     } catch (error) {
@@ -26,36 +32,52 @@ route.post('/signup', async(req, res)=>{
 })
 
 route.post('/login', async(req, res)=>{
+
   const {email, password} = req.body
 
-  const userExist = await user.findOne({email: email})
+  const userExist = await user.findOne({email: email});
+  
   if(!userExist){
-    return res.status(403).send('User not found') 
+    return res.status(403).send('User not found with this email');  
   }
   
-  const checkPassword = await bcrypt.compare(password, userExist.password)
+  const checkPassword = await bcrypt.compare(password, userExist.password);
 
-  if(!checkPassword){
-    return res.status(403).send("Password incorrect")
+
+  if (!email || !password) {
+    throw Error('All fields must be filled!');
   }
 
-  const token = jwt.sign({id: userExist._id, date: new Date()}, process.env.SECRET, {expiresIn: '2hr'})
+  if(!checkPassword){
+    return res.status(403).send("Password incorrect");
+  }
 
-  res.cookie('access_token', token, {
-    httpOnly:true,
-    secure:false
-}
-).send('Yay!!! login successful')
+  const token = createToken(userExist._id);
+
+  res.status(200).json({email,token});
+
+  /*
+
+    // res.cookie('access_token', token,{
+    //   httpOnly:true,
+    //   secure:false
+    // }).send('Yay!!! login successful').json({email,token})
+
+    // res.send("Logged in Successfully");
+
+  */
 
 })
 
+
+//JWT verification Code:
 const auth = async (req, res, next)=>{
   
   const token = req.cookies.access_token
-  const verification = jwt.verify(token, process.env.SECRET)
+  const verification = jwt.verify(token, process.env.SECRET);
 
   if(!verification){
-      return res.ststus(403).send('Forbidden')
+    return res.ststus(403).send('Forbidden');
   }
 
   const currentUser = await user.findById(verification.id)

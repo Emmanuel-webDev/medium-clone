@@ -2,16 +2,24 @@ const express = require('express');
 const cookie = require('cookie-parser');
 const mongoose  = require('mongoose');
 const rateLimiter = require('express-rate-limit');
+
+const cors = require('cors');
+
 const user = require('./Controllers/user');
 const article = require('./Controllers/article');
 require('dotenv').config();
 
 const app = express();
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookie()); 
-
 
 app.use(user);
 app.use(article);
