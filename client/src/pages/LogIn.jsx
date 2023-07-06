@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { toast } from "react-toastify";
-import { signup, reset } from '../features/Authentication/userSlice';
+import { login, reset } from '../features/Authentication/userSlice';
 
+const LogIn = () => {
 
-const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullname: "",
     email: "",
     password: ""
   });
 
-  const { fullname, email, password } = formData;
+  const { email, password } = formData;
 
   const handleChange = (e) => {
     setFormData(prevData => {
@@ -42,20 +41,15 @@ const SignUp = () => {
 
   }, [userAuth, loading, error, message, success, navigate, dispatch]);
 
-
-
-  const signUpUser = (e) => {
+  const LoginUser = (e)=>{
     e.preventDefault();
 
     const userData = {
-      fullname,
       email,
       password
     }
 
-    dispatch(signup(userData));
-
-    // console.log("Hello");
+    dispatch(login(userData));
   }
 
   if (loading) {
@@ -82,40 +76,28 @@ const SignUp = () => {
   }
 
   return (
-
     <div className='grid place-items-center'>
 
       <div className="signup-image w-52 ">
         <img src="/Images/SignUp_Medium_Logo.webp" alt="signup-image-logo" />
       </div>
 
-      <form className='signup flex  flex-col text-center justify-center items-center gap-4 w-[80vw] md:w-[60vw] lg:w-[40vw] h-[50vh] md:h-[65vh]  lg:h-[65vh] shadow-blue-900 shadow'
+      {error && error.message}
 
-        onSubmit={signUpUser}
+      <form className='signup flex  flex-col text-center justify-center items-center gap-4 w-[80vw] md:w-[60vw] lg:w-[35vw] h-[65vh] md:h-[65vh]  lg:h-[50vh] shadow-blue-900 shadow'
+
+        onSubmit={LoginUser}
       >
-        {/* Fullname,email,password */}
+        {/* email,password */}
 
-        <h3 className='text-gray-500 font-bold'>Sign up to tell your stories and interact with blog posts!</h3>
-
-        <div >
-
-          <input
-            type="text"
-            name="fullname"
-            className='text-center font-semibold p-1 border-gray-500 border-[1px] rounded-md w-[70vw] md:w-[50vw] lg:w-[30vw]'
-
-            placeholder='Enter Your Name'
-            onChange={handleChange}
-            value={formData.fullname}
-          />
-        </div>
+        <h3 className='text-gray-500 font-bold'>Login to continue to tell your stories and interact with blog posts!</h3>
 
         <div>
 
           <input
             type="email"
             name="email"
-            className='text-center font-semibold border-gray-500 border-[1px] rounded-md p-1 w-[70vw] md:w-[50vw] lg:w-[30vw]'
+            className='text-center font-semibold border-gray-500 border-[1px] rounded-md p-1 w-[70vw] md:w-[50vw] lg:w-[30vw] focus:border-blue-500 focus:border-[1px]'
 
             id="email"
             placeholder='Enter an E-mail'
@@ -139,9 +121,13 @@ const SignUp = () => {
 
         </div>
 
-        {/* Signup */}
+        {/* Login Button */}
         <div>
-          <button type='submit' className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-2 rounded-xl w-[12rem]'>Sign Up</button>
+          <button type='submit' className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-2 rounded-xl w-[12rem] mt-6'>Login</button>
+        </div>
+
+        <div>
+         <span className='font-bold text-gray-500'> No Account? </span> <Link to='/signup' className='text-green-400 font-bold underline'>Create One</Link> 
         </div>
 
       </form>
@@ -149,4 +135,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default LogIn

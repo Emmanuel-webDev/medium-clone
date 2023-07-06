@@ -99,6 +99,7 @@ router.get('/blog', authorization, async(req, res)=>{
 
 router.patch('/updateBlogs/:id', authorization, async(req, res)=>{
 const getBlog = await article.findById(req.params.id)
+
 if(getBlog.author !== req.user.fullname){
     return res.status(403).send('You cant update other authors blog')
 }

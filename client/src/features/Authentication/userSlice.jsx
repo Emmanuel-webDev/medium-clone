@@ -11,7 +11,6 @@ const token = localStorage.getItem('userToken')
 const initialState = {
     //If user exist in localstorage then get it other wise keep it null
     user: user ? user : null ,
-    number:4,
     token,
     loading:false,
     success:false,
@@ -23,13 +22,6 @@ const initialState = {
 
 export const signup = createAsyncThunk('auth/signup',async(user,thunkAPI)=>{
     try {
-        
-        const config = {
-            headers:{
-                'Content-Type': 'application/json',
-            },
-        }
-
         return await userAuthService.signUser(user);
 
     } catch (error) {
@@ -38,6 +30,26 @@ export const signup = createAsyncThunk('auth/signup',async(user,thunkAPI)=>{
 
         return thunkAPI.rejectWithValue(message);
     }
+})
+
+//log in the user
+export const login = createAsyncThunk('auth/login',async(user,thunkAPI)=>{
+    try {
+        return await userAuthService.loginUser(user);
+
+    } catch (error) {
+
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+//log out a user
+
+export const logout = createAsyncThunk('auth/logout',
+async()=>{
+    await userAuthService.logout();
 })
 
 const userSlice = createSlice({
@@ -67,6 +79,25 @@ const userSlice = createSlice({
             state.error = true;
             state.message = action.payload;
             state.user = null;
+        })
+        // logIn addCases 
+        .addCase(login.pending, (state)=>{
+            state.loading = true;
+        })
+        .addCase(login.fulfilled, (state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.user = action.payload;
+            
+        })
+        .addCase(login.rejected, (state,action)=>{
+            state.loading = false;
+            state.error = true;
+            state.message = action.payload;
+            state.user = null;
+        })
+        .addCase(logout.fulfilled, (state)=>{
+            state.user = null
         })
     }
 })
