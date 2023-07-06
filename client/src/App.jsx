@@ -3,7 +3,8 @@ import { ToastContainer } from "react-toastify";
 
 import Home from './pages/Home';
 import Write from './pages/Write';
-import SignUp from './pages/SignUp'
+import SignUp from './pages/SignUp';
+import LogIn from './pages/LogIn';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path='/' element={<Home/>} />
           <Route path='write' element={<Write/>} />
           <Route path='signup' element={<SignUp/>} />
+          <Route path='LogIn' element={<LogIn/>} />
         </Routes>
       </BrowserRouter>
 
