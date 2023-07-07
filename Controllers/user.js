@@ -15,9 +15,9 @@ route.post("/signup", async (req, res) => {
   const { fullname, email, password } = req.body;
 
   try {
-    const User = user.signup(fullname, email, password);
+    const newUser = user.signup(fullname, email, password);
 
-    const token = createToken(User._id);
+    const token = createToken(newUser._id);
 
     res.status(200).json({ fullname,email,token: token });
     
@@ -25,7 +25,6 @@ route.post("/signup", async (req, res) => {
     res.status(400).json({ error: error });
   }
 
-  res.status(200).send("Author Created");
 });
 
 route.post("/login", async (req, res) => {
@@ -66,22 +65,21 @@ route.post("/login", async (req, res) => {
 //JWT verification Code:
 
 const auth = async (req, res, next) => {
+
+  const { authorization } = req.headers;
+
+  if(!authorization){
+    return res.status(401).json({error:'Authorization token required'});
+  }
+
+  const token = authorization.split(" ")[0]
+
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-      return res.status(401).send("Not authorized, no token");
-    }
-
-    const verification = jwt.verify(token, process.env.SECRET);
-    const currentUser = await user.findById(verification.id).select('-password');
-
-    if (!currentUser) {
-      return res.status(401).send("Not authorized, user not found");
-    }
-
-    req.user = currentUser;
+    const {_id} = jwt.verify(token, process.env.SECRET);
+    
+    req.user = await user.findOne({_id}).select('_id');
     next();
+    
   } catch (error) {
     res.status(401).send("Not authorized, invalid token");
   }
@@ -132,3 +130,16 @@ route.post("/logout", auth, async (req, res) => {
 });
 
 module.exports = route;
+
+  // const token = req.headers.authorization?.split(' ')[1];
+  // if (!token) {
+  //   return res.status(401).send("Not authorized, no token");
+  // }
+
+  // const currentUser = await user.findById(verification.id).select('-password');
+
+  // if (!currentUser) {
+  //   return res.status(401).send("Not authorized, user not found");
+  // }
+
+  // next();

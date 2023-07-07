@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
+
 import { TiPen } from "react-icons/ti";
 import { TfiUser } from "react-icons/tfi";
+import {TbLogout} from "react-icons/tb"
+
 
 import { logout, reset } from "../features/Authentication/userSlice";
 
@@ -47,8 +51,8 @@ import { logout, reset } from "../features/Authentication/userSlice";
 
                     {/* Profile which is on the top right */}
                     <div className="z-10 flex gap-x-3">
-                        {user ? (<button onClick={onLogout}>
-                            logout
+                        {user ? ( <button className="flex lg:mr-8" onClick={onLogout}>
+                            <TbLogout size={25}/> logout
                         </button>) : (<>
                             <Link to='/login' className="hidden md:block mt-2 ">
                                 login
@@ -64,14 +68,14 @@ import { logout, reset } from "../features/Authentication/userSlice";
                         </>)}
 
 
-                        {/* <button className="sm:justify-end mr-5 flex" onClick={() => { setMenu(!menu) }}>
+                        { user ?  <button className="sm:justify-end mr-5 flex" onClick={() => { setMenu(!menu) }}>
                             <div className="user-profile">
                                 <TfiUser size={25} />
                             </div>
                             <div className="mt-1">
                                 <img className="w-5" src="/Images/profile_arrow.jpeg" alt="little-arrow" />
                             </div>
-                        </button> */}
+                        </button> : ""}
                     </div>
 
                     {/* If clicked on profile button, this list of things will pop up */}
@@ -99,7 +103,7 @@ import { logout, reset } from "../features/Authentication/userSlice";
                                 <p>Profile</p>
                             </div>
 
-                        </Link>
+                        </Link> 
                     </div> : ""}
                 </div>
             </header>
