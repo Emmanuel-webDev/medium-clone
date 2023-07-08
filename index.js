@@ -1,12 +1,10 @@
 const express = require('express');
-const cookie = require('cookie-parser');
-const mongoose  = require('mongoose');
 const rateLimiter = require('express-rate-limit');
-
 const cors = require('cors');
-
 const user = require('./Controllers/user');
 const article = require('./Controllers/article');
+const DB = require('./dbConnection/db');
+const { application } = require('express');
 require('dotenv').config();
 
 const app = express();
@@ -17,15 +15,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use(cookie()); 
-
-app.use('/api/user',user);
-app.use('/api',article);
-
-mongoose.connect('mongodb://127.0.0.1:27017/medium', {UseNewUrlParser: true}).then(()=>{
-    
+app.use(express.urlencoded({limit: "100mb", extended: true, parameterLimit:"500000"}));
+app.use(express.json({limit: "100mb", extended: true}));
+app.use((req, res, next)=>{
+    res.setHeader('Content-Type', 'application/json')
+    next();
+})
 app.use(rateLimiter({
     windowMs: 0.25 * 60 * 1000,
     max: 5,
@@ -34,16 +29,24 @@ app.use(rateLimiter({
     legacyHeaders: false
 }))
 
-app.use((err, req, res, next)=>{
-    console.log(err.message)
-    return res.status(500).send('Server down...')
-    next();
+//db
+DB('mongodb://127.0.0.1:27017/medium');
+
+app.use('/api/user',user);
+app.use('/api',article);
+    
+//Response not found
+app.use((req, res, next)=>{
+    res.status(404).json('Resources not found')
+    next()
 })
 
-app.listen(process.env.PORT, ()=>{
+//Server crashes 
+app.use((err,req, res, next)=>{
+    return res.status(500).send(err.message)
+})
+
+app.listen(process.env.PORT || 5000, ()=>{
     console.log("You've got this!!")
 })
 
-}).catch((err)=>{
-    console.log("mongoDB connection failed",err);
-})

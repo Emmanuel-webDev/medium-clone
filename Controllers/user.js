@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const user = require("../Model/user");
 const article = require("../Controllers/article");
-const jois = require("../inputsValidator");
 
 const route = express.Router();
 
@@ -50,16 +49,6 @@ route.post("/login", async (req, res) => {
 
   res.status(200).json({ email, token });
 
-  /*
-
-    // res.cookie('access_token', token,{
-    //   httpOnly:true,
-    //   secure:false
-    // }).send('Yay!!! login successful').json({email,token})
-
-    // res.send("Logged in Successfully");
-
-  */
 });
 
 //JWT verification Code:
@@ -73,6 +62,7 @@ const auth = async (req, res, next) => {
   }
 
   const token = authorization.split(" ")[0]
+  req.token = token;
 
   try {
     const {_id} = jwt.verify(token, process.env.SECRET);
@@ -95,7 +85,7 @@ route.post("/follow/:id", auth, async (req, res) => {
   res.send("You followed");
 });
 
-route.get("/user/:id", async (req, res) => {
+route.get("/user/:id", auth, async (req, res) => {
   const person = await user.findById({ _id: req.params.id });
   if (!person) {
     return res.status(404).send("User not found");
@@ -116,30 +106,12 @@ route.get("/user/:id", async (req, res) => {
   res.send(person);
 });
 
-route.get("/users", async (req, res) => {
-  res.send(await user.find());
-});
-
-route.delete("/del", async (req, res) => {
-  await user.deleteMany();
-  res.send("Done");
-});
 
 route.post("/logout", auth, async (req, res) => {
-  return res.clearCookie("access_token").send("You logged out");
+  if(req.token){
+     req.token = ""
+     return res.send("User Logged out successfuly")
+  }
 });
 
 module.exports = route;
-
-  // const token = req.headers.authorization?.split(' ')[1];
-  // if (!token) {
-  //   return res.status(401).send("Not authorized, no token");
-  // }
-
-  // const currentUser = await user.findById(verification.id).select('-password');
-
-  // if (!currentUser) {
-  //   return res.status(401).send("Not authorized, user not found");
-  // }
-
-  // next();
