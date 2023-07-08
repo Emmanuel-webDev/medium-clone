@@ -83,7 +83,7 @@ route.post("/follow/:id", auth, async (req, res) => {
     author: req.user._id,
   });
 
-  res.send("You followed");
+  res.status(201).json({msg: "You followed"});
 });
 
 route.get("/user/:id", auth, async (req, res) => {
@@ -104,7 +104,7 @@ route.get("/user/:id", auth, async (req, res) => {
   });
   person.save();
 
-  res.send(person);
+  res.status(200).json(person);
 });
 
 
@@ -112,7 +112,7 @@ route.post("/logout", auth, async (req, res) => {
   if(req.headers.authorization){
        req.headers.authorization = null || ' ' 
   }
-  return res.send("User Logged out successfuly")
+  return res.json("User Logged out successfuly")
 });
 
 module.exports = route;
