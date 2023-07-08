@@ -1,6 +1,6 @@
-# medium-clone 
+# Medium-Clone 
 
-Features 
+<u> Features <\u> 
 . Signup, login and logout with jsonwebtoken,
 . Logged in users can create blogs,
 . Logged in users can follow and be followed by other users,
