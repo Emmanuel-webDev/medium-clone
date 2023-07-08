@@ -32,13 +32,14 @@ route.post("/login", async (req, res) => {
   const userExist = await user.findOne({ email: email });
 
   if (!userExist) {
-    return res.status(403).send("User not found with this email");
+    return res.status(404).send("User not found with this email");
   }
 
   const checkPassword = await bcrypt.compare(password, userExist.password);
 
   if (!email || !password) {
     throw Error("All fields must be filled!");
+    return;
   }
 
   if (!checkPassword) {
@@ -61,7 +62,7 @@ const auth = async (req, res, next) => {
     return res.status(401).json({error:'Authorization token required'});
   }
 
-  const token = authorization.split(" ")[0]
+  const token = authorization.split(" ")[1]
   req.token = token;
 
   try {
@@ -108,10 +109,10 @@ route.get("/user/:id", auth, async (req, res) => {
 
 
 route.post("/logout", auth, async (req, res) => {
-  if(req.token){
-     req.token = ""
-     return res.send("User Logged out successfuly")
+  if(req.headers.authorization){
+       req.headers.authorization = null || ' ' 
   }
+  return res.send("User Logged out successfuly")
 });
 
 module.exports = route;

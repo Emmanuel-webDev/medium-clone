@@ -30,7 +30,7 @@ app.use(rateLimiter({
 }))
 
 //db
-DB('mongodb://127.0.0.1:27017/medium');
+DB(process.env.MONGO_URL);
 
 app.use('/api/user',user);
 app.use('/api',article);
@@ -46,7 +46,7 @@ app.use((err,req, res, next)=>{
     return res.status(500).send(err.message)
 })
 
-app.listen(process.env.PORT || 5000, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log("You've got this!!")
 })
 
