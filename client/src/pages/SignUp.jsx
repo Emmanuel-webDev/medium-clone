@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { signup, reset } from '../features/Authentication/userSlice';
 
@@ -89,7 +89,7 @@ const SignUp = () => {
         <img src="/Images/SignUp_Medium_Logo.webp" alt="signup-image-logo" />
       </div>
 
-      <form className='signup flex  flex-col text-center justify-center items-center gap-4 w-[80vw] md:w-[60vw] lg:w-[40vw] h-[50vh] md:h-[65vh]  lg:h-[65vh] shadow-blue-900 shadow'
+      <form className='signup flex  flex-col text-center justify-center items-center gap-4 w-[80vw] md:w-[60vw] lg:w-[40vw] h-[60vh] md:h-[65vh]  lg:h-[65vh] shadow-blue-900 shadow'
 
         onSubmit={signUpUser}
       >
@@ -142,6 +142,10 @@ const SignUp = () => {
         {/* Signup */}
         <div>
           <button type='submit' className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-2 rounded-xl w-[12rem]'>Sign Up</button>
+        </div>
+
+        <div>
+         <span className='font-bold text-gray-500'> Already have an Account? </span> <Link to='/login' className='text-green-400 font-bold underline'>LogIn</Link> 
         </div>
 
       </form>

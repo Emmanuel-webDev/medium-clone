@@ -21,8 +21,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookie()); 
 
-app.use(user);
-app.use(article);
+app.use('/api/user',user);
+app.use('/api',article);
 
 mongoose.connect('mongodb://127.0.0.1:27017/medium', {UseNewUrlParser: true}).then(()=>{
     
@@ -44,4 +44,6 @@ app.listen(process.env.PORT, ()=>{
     console.log("You've got this!!")
 })
 
+}).catch((err)=>{
+    console.log("mongoDB connection failed",err);
 })

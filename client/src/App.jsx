@@ -20,7 +20,10 @@ function App() {
         </Routes>
       </BrowserRouter>
 
-      <ToastContainer/>
+      <div className='flex justify-center items-center'>
+
+        <ToastContainer className='text-center w-[150px] h-[50px]'/>
+      </div>
     </>
   )
 }
