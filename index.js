@@ -4,6 +4,7 @@ const cors = require('cors');
 const user = require('./Controllers/user');
 const article = require('./Controllers/article');
 const DB = require('./dbConnection/db');
+const compressor = require('compression')
 const { application } = require('express');
 require('dotenv').config();
 
@@ -28,6 +29,9 @@ app.use(rateLimiter({
     standardHeaders: true,
     legacyHeaders: false
 }))
+
+//gzip compression
+app.use(compressor());
 
 //db
 DB(process.env.MONGO_URL);
