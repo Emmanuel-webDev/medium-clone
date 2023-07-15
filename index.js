@@ -47,7 +47,7 @@ app.use((req, res, next)=>{
 
 //Server crashes 
 app.use((err,req, res, next)=>{
-    return res.status(500).send(err.message)
+    return res.status(500).send({msg: err.message})
 })
 
 app.listen(process.env.PORT, ()=>{

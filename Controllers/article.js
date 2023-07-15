@@ -2,23 +2,9 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const article = require('../Model/article')
 const userSchema = require('../Model/user')
-const user = require('../Controllers/user')
-
+const { authorization } = require("../auth/auth")
 const router = express.Router()
 
-const authorization = async (req, res, next)=>{
-    const token = req.cookies.access_token
-    const verification = jwt.verify(token, process.env.SECRET)
-
-    if(!verification){
-        return res.ststus(403).send('Forbidden')
-    }
-
-    const user = await userSchema.findById(verification.id)
-    req.user = user
-
-    next();
-}
 
 //write a story
 router.post("/publish", authorization, async(req, res)=>{

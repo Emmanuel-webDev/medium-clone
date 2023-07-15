@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const user = require("../Model/user");
 const article = require("../Controllers/article");
-
+const { authorization } = require("../auth/auth")
 const route = express.Router();
 
 const createToken = (_id) => {
@@ -52,32 +52,8 @@ route.post("/login", async (req, res) => {
 
 });
 
-//JWT verification Code:
 
-const auth = async (req, res, next) => {
-
-  const { authorization } = req.headers;
-
-  if(!authorization){
-    return res.status(401).json({error:'Authorization token required'});
-  }
-
-  const token = authorization.split(" ")[1]
-  req.token = token;
-
-  try {
-    const {_id} = jwt.verify(token, process.env.SECRET);
-    
-    req.user = await user.findOne({_id}).select('_id');
-    next();
-    
-  } catch (error) {
-    res.status(401).send("Not authorized, invalid token");
-  }
-};
-
-
-route.post("/follow/:id", auth, async (req, res) => {
+route.post("/follow/:id", authorization, async (req, res) => {
   const author = await user.findById({ _id: req.params.id });
   const action = author.follower({
     author: req.user._id,
@@ -86,7 +62,7 @@ route.post("/follow/:id", auth, async (req, res) => {
   res.status(201).json({msg: "You followed"});
 });
 
-route.get("/user/:id", auth, async (req, res) => {
+route.get("/user/:id", authorization, async (req, res) => {
   const person = await user.findById({ _id: req.params.id });
   if (!person) {
     return res.status(404).send("User not found");
@@ -108,11 +84,13 @@ route.get("/user/:id", auth, async (req, res) => {
 });
 
 
-route.post("/logout", auth, async (req, res) => {
+route.post("/logout", authorization, async (req, res) => {
   if(req.headers.authorization){
        req.headers.authorization = null || ' ' 
   }
   return res.json("User Logged out successfuly")
 });
 
-module.exports = route;
+
+module.exports = route
+
