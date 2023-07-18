@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const user = require("../Model/user");
 const article = require("../Controllers/article");
-const { authorization } = require("../auth/auth")
+const { authorizations } = require("../auth/auth")
 const route = express.Router();
 
 const createToken = (_id) => {
@@ -53,7 +53,7 @@ route.post("/login", async (req, res) => {
 });
 
 
-route.post("/follow/:id", authorization, async (req, res) => {
+route.post("/follow/:id", authorizations, async (req, res) => {
   const author = await user.findById({ _id: req.params.id });
   const action = author.follower({
     author: req.user._id,
@@ -62,7 +62,7 @@ route.post("/follow/:id", authorization, async (req, res) => {
   res.status(201).json({msg: "You followed"});
 });
 
-route.get("/user/:id", authorization, async (req, res) => {
+route.get("/user/:id", authorizations, async (req, res) => {
   const person = await user.findById({ _id: req.params.id });
   if (!person) {
     return res.status(404).send("User not found");
@@ -84,7 +84,7 @@ route.get("/user/:id", authorization, async (req, res) => {
 });
 
 
-route.post("/logout", authorization, async (req, res) => {
+route.post("/logout", authorizations, async (req, res) => {
   if(req.headers.authorization){
        req.headers.authorization = null || ' ' 
   }

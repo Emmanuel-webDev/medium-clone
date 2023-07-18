@@ -1,5 +1,8 @@
+const users = require('../Model/user')
+const jwt = require('jsonwebtoken')
+require('dotenv').config();
 //JWT verification Code:
- exports.authorization = async (req, res, next) => {
+ exports.authorizations = async(req, res, next) => {
 
     const { authorization } = req.headers;
   
@@ -9,16 +12,15 @@
   
     const token = authorization.split(" ")[1]
     req.token = token;
-  
-    try {
+ 
+    if(token){
       const {_id} = jwt.verify(token, process.env.SECRET);
-      
-      req.user = await user.findOne({_id}).select('_id');
+      req.user = await users.findOne({_id}).select('_id');
       next();
-      
-    } catch (error) {
-      res.status(401).send("Not authorized, invalid token");
-    }
+  }else{
+    res.status(401).send("Not authenticated, invalid token");
+  }
+     
+  
   };
-
   
