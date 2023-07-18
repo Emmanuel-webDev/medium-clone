@@ -16,9 +16,9 @@ route.post("/signup", async (req, res) => {
   try {
     const newUser = user.signup(fullname, email, password);
 
-    const token = createToken(newUser._id);
+    //const token = createToken(newUser._id);
 
-    res.status(200).json({ fullname,email,token: token });
+    res.status(200).json({ fullname,email});
     
   } catch (error) {
     res.status(400).json({ error: error });
