@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate,Link } from 'react-router-dom';
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { login, reset } from '../features/Authentication/userSlice';
+
 
 const LogIn = () => {
 
@@ -30,11 +31,13 @@ const LogIn = () => {
   useEffect(() => {
 
     if (error) {
-      toast.error(message);
+      toast.error("Incorrect email or password");
+      
     }
 
     if (success) {
       navigate('/');
+
     }
 
     dispatch(reset());
@@ -76,13 +79,15 @@ const LogIn = () => {
   }
 
   return (
+    <>
+    
+    {/* <ToastContainer className='text-center w-[100px] h-[50px]' /> */}
     <div className='grid place-items-center'>
 
       <div className="signup-image w-52 ">
         <img src="/Images/SignUp_Medium_Logo.webp" alt="signup-image-logo" />
       </div>
 
-      {error && error.message}
 
       <form className='signup flex  flex-col text-center justify-center items-center gap-4 w-[80vw] md:w-[60vw] lg:w-[35vw] h-[65vh] md:h-[65vh]  lg:h-[50vh] shadow-blue-900 shadow'
 
@@ -132,6 +137,7 @@ const LogIn = () => {
 
       </form>
     </div>
+    </>
   )
 }
 

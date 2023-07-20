@@ -7,19 +7,20 @@ const cors = require('cors');
 
 const user = require('./Controllers/user');
 const article = require('./Controllers/article');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST','PUT','DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cookie()); 
+app.use(cookieParser()); 
 
 app.use('/api/user',user);
 app.use('/api',article);

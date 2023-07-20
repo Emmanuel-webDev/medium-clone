@@ -31,7 +31,7 @@ const SignUp = () => {
   useEffect(() => {
 
     if (error) {
-      toast.error(message);
+      toast.error(message); 
     }
 
     if (success) {
@@ -41,7 +41,6 @@ const SignUp = () => {
     dispatch(reset());
 
   }, [userAuth, loading, error, message, success, navigate, dispatch]);
-
 
 
   const signUpUser = (e) => {
