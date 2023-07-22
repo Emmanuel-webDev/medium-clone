@@ -15,6 +15,10 @@ require('dotenv').config();
  
     if(token){
       const {_id} = jwt.verify(token, process.env.SECRET);
+      //token expiration
+      if(err.name === "TokenExpiredError"){
+        return res.status(401).send("Token has expired login again")
+      }
       req.user = await users.findOne({_id}).select('_id');
       next();
   }else{

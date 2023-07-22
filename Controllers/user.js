@@ -85,10 +85,15 @@ route.get("/user/:id", authorizations, async (req, res) => {
 
 
 route.post("/logout", authorizations, async (req, res) => {
-  if(req.headers.authorization){
-       req.headers.authorization = null || ' ' 
+const authHeader = req.headers['authorization']
+jwt.sign(authHeader, "", {expiresIn : 1}, (logout, err)=>{
+  if(logout){
+    return res.send('Logout successful')
+  } else {
+    res.send({msg: err})
   }
-  return res.json("User Logged out successfuly")
+})
+
 });
 
 
