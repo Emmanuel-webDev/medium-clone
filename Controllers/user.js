@@ -7,7 +7,7 @@ const { authorizations } = require("../auth/auth")
 const route = express.Router();
 
 const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "1d" });
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "24h" });
 };
 
 route.post("/signup", async (req, res) => {
