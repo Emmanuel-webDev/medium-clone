@@ -6,6 +6,7 @@ import Write from './pages/Write';
 import SignUp from './pages/SignUp';
 import LogIn from './pages/LogIn';
 import Error from './pages/Error';
+import Layout from './components/Layout';
 
 
 function App() {
@@ -14,11 +15,13 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home/>} />
-          <Route path='write' element={<Write/>} />
-          <Route path='signup' element={<SignUp/>} />
-          <Route path='LogIn' element={<LogIn/>} />
-          <Route path='*' element={<Error/>} />
+          <Route element={<Layout/>} >
+            <Route path='/' element={<Home/>} />
+            <Route path='newstory' element={<Write/>} />
+            <Route path='signup' element={<SignUp/>} />
+            <Route path='LogIn' element={<LogIn/>} />
+            <Route path='*' element={<Error/>} />
+          </Route>
         </Routes>
       </BrowserRouter>
 

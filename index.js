@@ -25,7 +25,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser()); 
 
-app.use('/api/user',user);
+app.use('/auth/',user);
 app.use('/api',article);
 
 
