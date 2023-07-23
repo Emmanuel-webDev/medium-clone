@@ -44,10 +44,12 @@ userSchema.statics.signup = async function(fullname, email, password) {
     
     if (!validator.isEmail(email)) {
         throw new Error('E-mail is not valid');
+        return;
     }
     
     if (!validator.isStrongPassword(password)) {
         throw new Error('Password is not strong enough');
+        return;
     }
     
     const userExist = await this.findOne({ email });
@@ -59,7 +61,7 @@ userSchema.statics.signup = async function(fullname, email, password) {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
   
-    const newUser = await this({ fullname, email, password: hash });
+    const newUser = await this({fullname, email, password: hash});
 
     const userCreated = await newUser.save();
   
@@ -68,11 +70,3 @@ userSchema.statics.signup = async function(fullname, email, password) {
   
 
 module.exports = mongoose.model("user", userSchema)
-
-    /*
-        const author = new user({
-      fullname:req.body.fullname,
-      email: req.body.email,
-      password: req.body.password
-    })
-    */

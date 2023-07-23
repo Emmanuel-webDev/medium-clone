@@ -2,26 +2,12 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const article = require('../Model/article')
 const userSchema = require('../Model/user')
-const user = require('../Controllers/user')
-
+const { authorizations } = require("../auth/auth")
 const router = express.Router()
 
-const authorization = async (req, res, next)=>{
-    const token = req.cookies.access_token
-    const verification = jwt.verify(token, process.env.SECRET)
-
-    if(!verification){
-        return res.ststus(403).send('Forbidden')
-    }
-
-    const user = await userSchema.findById(verification.id)
-    req.user = user
-
-    next();
-}
 
 //write a story
-router.post("/publish", authorization, async(req, res)=>{
+router.post("/publish", authorizations, async(req, res)=>{
      
     const {read_time, text} = req.body
      const amountOfWords = text.split(" ").length
@@ -49,7 +35,7 @@ router.post('/clap/:id', async(req, res)=>{
 })
 
 //write a comment
-router.post('/comment/:id', authorization, async (req, res)=>{
+router.post('/comment/:id', authorizations, async (req, res)=>{
     const {comments}  = req.body
 
   const story = await article.findById({_id: req.params.id})
@@ -75,7 +61,7 @@ router.get('/story/:id', async(req, res)=>{
 })
 
 //get personal stories
-router.get('/personalBlogs', authorization, async(req, res)=>{
+router.get('/personalBlogs', authorizations, async(req, res)=>{
     const stories = await article.aggregate([
         {
             $match:{author: req.user.fullname}
@@ -89,7 +75,7 @@ router.get('/personalBlogs', authorization, async(req, res)=>{
 })
 
 //filter Post By Tags
-router.get('/blog', authorization, async(req, res)=>{
+router.get('/blog', authorizations, async(req, res)=>{
     const filter = await article.find({tags: { $in: [req.query.tags] }})
     if(filter.length === 0){
         return res.status(404).send("Couldn't find any post")
@@ -97,7 +83,7 @@ router.get('/blog', authorization, async(req, res)=>{
     return res.status(200).send(filter)
 })
 
-router.patch('/updateBlogs/:id', authorization, async(req, res)=>{
+router.patch('/updateBlogs/:id', authorizations, async(req, res)=>{
 const getBlog = await article.findById(req.params.id)
 
 if(getBlog.author !== req.user.fullname){
@@ -112,7 +98,7 @@ if(getBlog.author !== req.user.fullname){
     res.status(201).send('updated');
 })
 
-router.delete('/delblogs/:id', authorization, async(req, res)=>{
+router.delete('/delblogs/:id', authorizations, async(req, res)=>{
     const getBlog = await article.findById(req.params.id)
       if(getBlog.author !== req.user.fullname){
          return res.status(403).send('You cant delete other authors blog')
