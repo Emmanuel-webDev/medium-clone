@@ -22,7 +22,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser()); 
 
-app.use('/api/user',user);
+app.use('/auth/',user);
 app.use('/api',article);
 
 mongoose.connect('mongodb://127.0.0.1:27017/medium', {UseNewUrlParser: true}).then(()=>{

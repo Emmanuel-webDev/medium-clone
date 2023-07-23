@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const signupURL = "http://localhost:4000/api/user/signup";
-const loginURL = "http://localhost:4000/api/user/login";
-
+const signupURL = import.meta.env.VITE_SIGNUP;
+const loginURL = import.meta.env.VITE_LOGIN;
+  
 // register/signup a user
 const signUser = async (userData) =>{
     const response = await axios.post(signupURL,userData);
