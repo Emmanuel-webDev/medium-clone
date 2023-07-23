@@ -32,18 +32,26 @@ route.post("/login", async (req, res) => {
   const userExist = await user.findOne({ email: email });
 
   if (!userExist) {
-    return res.status(404).send("User not found with this email");
+
+    return res.status(403).json({message: "User not found with this email"});
+
+
+
   }
 
   const checkPassword = await bcrypt.compare(password, userExist.password);
 
   if (!email || !password) {
-    throw Error("All fields must be filled!");
-    return;
+
+    return res.status(403).json({message: "All fields must be filled"});
+
+ 
+
+
   }
 
   if (!checkPassword) {
-    return res.status(403).send("Password incorrect");
+    return res.status(403).json({message: "Password incorrect"});
   }
 
   const token = createToken(userExist._id);

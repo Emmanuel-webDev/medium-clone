@@ -26,9 +26,9 @@ export const signup = createAsyncThunk('auth/signup',async(user,thunkAPI)=>{
 
     } catch (error) {
 
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        // const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue(error);
     }
 })
 
@@ -72,7 +72,6 @@ const userSlice = createSlice({
             state.loading = false;
             state.success = true;
             state.user = action.payload;
-            // localStorage.setItem('user',JSON.stringify(action.payload));
         })
         .addCase(signup.rejected, (state,action)=>{
             state.loading = false;
