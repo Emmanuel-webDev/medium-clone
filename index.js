@@ -4,7 +4,6 @@ const cors = require('cors');
 const user = require('./Controllers/user');
 const article = require('./Controllers/article');
 
-const cookieParser = require('cookie-parser');
 
 const DB = require('./dbConnection/db');
 const compressor = require('compression')
@@ -22,17 +21,16 @@ app.use(cors({
 
 
 app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use(cookieParser()); 
+app.use(express.json()); 
 
 app.use('/auth/',user);
 app.use('/api',article);
 
 
-    
-=======
 app.use(express.urlencoded({limit: "100mb", extended: true, parameterLimit:"500000"}));
+
 app.use(express.json({limit: "100mb", extended: true}));
+
 app.use((req, res, next)=>{
     res.setHeader('Content-Type', 'application/json')
     next();
@@ -69,4 +67,3 @@ app.use((err,req, res, next)=>{
 app.listen(process.env.PORT, ()=>{
     console.log("You've got this!!")
 })
-

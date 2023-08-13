@@ -16,7 +16,7 @@ route.post("/signup", async (req, res) => {
   try {
     const newUser = user.signup(fullname, email, password);
 
-    //const token = createToken(newUser._id);
+    const token = createToken(newUser._id);
 
     res.status(200).json({ fullname,email});
     
@@ -70,6 +70,50 @@ route.post("/follow/:id", authorizations, async (req, res) => {
   res.status(201).json({msg: "You followed"});
 });
 
+route.get('/user/:id', authorizations, async (req, res) => {
+  try {
+    const person = await user.findById(req.params.id);
+    if (!person) {
+      return res.status(404).send('User not found');
+    }
+
+    const authIFollow = await user.aggregate([
+      {
+        $match: { followers: { $elemMatch: { author: person._id } } },
+      },
+    ]);
+
+    person.following = [];
+    authIFollow.forEach((user) => {
+      person.following.push({ author: user._id });
+    });
+
+    res.status(200).json(person);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+
+
+route.post("/logout", authorizations, async (req, res) => {
+const authHeader = req.headers['authorization']
+jwt.sign(authHeader, "", {expiresIn : 1}, (logout, err)=>{
+  if(logout){
+    return res.send('Logout successful')
+  } else {
+    res.send({msg: err})
+  }
+})
+
+});
+
+
+module.exports = route
+
+/* 
+
 route.get("/user/:id", authorizations, async (req, res) => {
   const person = await user.findById({ _id: req.params.id });
   if (!person) {
@@ -92,18 +136,5 @@ route.get("/user/:id", authorizations, async (req, res) => {
 });
 
 
-route.post("/logout", authorizations, async (req, res) => {
-const authHeader = req.headers['authorization']
-jwt.sign(authHeader, "", {expiresIn : 1}, (logout, err)=>{
-  if(logout){
-    return res.send('Logout successful')
-  } else {
-    res.send({msg: err})
-  }
-})
-
-});
-
-
-module.exports = route
+*/
 

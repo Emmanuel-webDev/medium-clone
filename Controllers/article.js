@@ -1,9 +1,9 @@
-const express = require('express')
-const jwt = require('jsonwebtoken')
-const article = require('../Model/article')
-const userSchema = require('../Model/user')
-const { authorizations } = require("../auth/auth")
-const router = express.Router()
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const article = require('../Model/article');
+const userSchema = require('../Model/user');
+const { authorizations } = require("../auth/auth");
+const router = express.Router();
 
 
 //write a story
