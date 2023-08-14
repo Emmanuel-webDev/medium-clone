@@ -31,9 +31,11 @@ const Header = () => {
 
                 <div className="parent-div p-2 flex justify-between">
                     {/* top left logo */}
+                   <Link to='/'>
                     <div className="top-left-image ml-4 flex">
                         <div> <img className="w-14 h-8" src="/Images/top_logo.png" alt="logo" /> </div>
                     </div>
+                   </Link> 
 
                     {/* Write button for Desktop-view */}
 
@@ -52,7 +54,7 @@ const Header = () => {
 
                     {/* Profile which is on the top right */}
                     <div className="z-10 flex gap-x-3">
-                        {user ? (<button className="flex lg:mr-8" onClick={onLogout}>
+                        {user ? (<button className="hidden md:block lg:mr-8" onClick={onLogout}>
                             <TbLogout size={25} /> logout
                         </button>
                         ) : (<>
@@ -80,10 +82,10 @@ const Header = () => {
                     </div>
 
                     {/* If clicked on profile button, this list of things will pop up (mobile-view) */}
-                    {menu && user ? <div className="bg-white w-[40%] shadow-xl absolute top-12 right-4 rounded-md p-5 lg:w-[25%] lg:mt-3">
+                    {menu && user ? <div className="bg-white w-[40%] shadow-xl absolute top-12 right-4 rounded-md p-5 lg:w-[15%] lg:mt-3">
 
 
-                        <Link to='/newstory' className="flex md:hidden">
+                        <Link to='/newstory' className="flex md:hidden ">
                             <div className=" pr-2">
                                 <TiPen size={25} color="black" />
                             </div>
@@ -94,7 +96,7 @@ const Header = () => {
 
                         </Link>
 
-                        <Link className="flex mt-2">
+                        <Link to={`/${user.email}`} className="flex mt-2">
 
                             <div className="user-profile pr-2 ">
                                 <TfiUser size={22} />
@@ -104,6 +106,17 @@ const Header = () => {
                                 <p>Profile</p>
                             </div>
 
+                        </Link>
+
+                        <Link to='/' className="flex mt-2">
+
+                            <div>
+                                <button className="flex lg:mr-8" onClick={onLogout}>
+                                    <TbLogout size={25} /> 
+                                    <p>logout</p>
+                                </button>
+                            </div>
+                                
                         </Link>
                     </div> : ""}
                 </div>

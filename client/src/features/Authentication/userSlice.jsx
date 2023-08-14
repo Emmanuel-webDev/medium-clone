@@ -11,7 +11,6 @@ const token = localStorage.getItem('userToken')
 const initialState = {
     //If user exist in localstorage then get it other wise keep it null
     user: user ? user : null ,
-    token,
     loading:false,
     success:false,
     error:false,

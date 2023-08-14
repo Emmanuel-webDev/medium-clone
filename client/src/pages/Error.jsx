@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 const Error = () => {
     return (
         <>
-            <header className="h-20 bg-white shadow-slate-200 shadow-md">
+            <header className="h-14 bg-slate-50">
 
                 <div className="parent-div p-2 flex justify-between">
                     {/* top left logo */}
-                    <div className="top-left-image ml-8 mt-2 flex">
-                        <div> <img className="w-44 h-12" src="/Images/error_top_logo.png" alt="logo" /></div>
+                    <div className="top-left-image ml-4 flex">
+                        <div> <img className="w-14 h-8" src="/Images/top_logo.png" alt="logo" /> </div>
                     </div>
                 </div>
             </header>
@@ -29,7 +29,7 @@ const Error = () => {
                         You can find (just about) anything on Medium — apparently even a page that doesn’t exist. Maybe these stories about finding what you didn’t know you were looking for will take you somewhere new?
                     </p>
 
-                    <Link to='/' className='underline mt-6 text-xl font-semibold '> <p className='text-center'>Home</p></Link>
+                    <Link to='/' className='underline mb-8 text-xl font-semibold '> <p className='text-center'>Home</p></Link>
                 </div>
             </section>
         </>
